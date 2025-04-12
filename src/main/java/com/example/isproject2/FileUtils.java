@@ -28,7 +28,7 @@ public class FileUtils {
         return null;
     }
 
-    public static Image saveImageResult(Image image) throws IOException {
+    public static void saveImageResult(Image image) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialFileName("alisher-get-automatic.png");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.bmp"));
@@ -37,7 +37,6 @@ public class FileUtils {
             BufferedImage bufferedImage = transformToBufferedImage(image);
             ImageIO.write(bufferedImage, "png", file);
         }
-        return null;
     }
 
     public static BufferedImage transformToBufferedImage(Image image) {
