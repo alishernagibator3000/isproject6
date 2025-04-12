@@ -88,9 +88,9 @@ public class ImageProcessor {
         int width = (int) image.getWidth();
         int height = (int) image.getHeight();
 
-        PixelReader reader = image.getPixelReader();
-        WritableImage tempImage = new WritableImage(width, height);
-        PixelWriter tempWriter = tempImage.getPixelWriter();
+        PixelReader pixelReader = image.getPixelReader();
+        WritableImage tempWritableImage = new WritableImage(width, height);
+        PixelWriter tempPixelWriter = tempWritableImage.getPixelWriter();
 
         double[] kernel = createGaussianKernel1D(kernelSize, sigma);
         int radius = kernelSize / 2;
@@ -102,7 +102,7 @@ public class ImageProcessor {
 
                 for (int i = -radius; i <= radius; i++) {
                     int xi = clampIndex(x + i, width);
-                    Color color = reader.getColor(xi, y);
+                    Color color = pixelReader.getColor(xi, y);
                     double weight = kernel[i + radius];
 
                     r += color.getRed() * weight;
@@ -111,13 +111,13 @@ public class ImageProcessor {
                     weightSum += weight;
                 }
 
-                tempWriter.setColor(x, y, new Color(clamp(r / weightSum), clamp(g / weightSum), clamp(b / weightSum), 1.0));
+                tempPixelWriter.setColor(x, y, new Color(clamp(r / weightSum), clamp(g / weightSum), clamp(b / weightSum), 1.0));
             }
         }
 
-        PixelReader tempReader = tempImage.getPixelReader();
+        PixelReader tempPixelReader = tempWritableImage.getPixelReader();
         WritableImage output = new WritableImage(width, height);
-        PixelWriter outputWriter = output.getPixelWriter();
+        PixelWriter outputPixelWriter = output.getPixelWriter();
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -126,7 +126,7 @@ public class ImageProcessor {
 
                 for (int i = -radius; i <= radius; i++) {
                     int yi = clampIndex(y + i, height);
-                    Color color = tempReader.getColor(x, yi);
+                    Color color = tempPixelReader.getColor(x, yi);
                     double weight = kernel[i + radius];
 
                     r += color.getRed() * weight;
@@ -135,7 +135,7 @@ public class ImageProcessor {
                     weightSum += weight;
                 }
 
-                outputWriter.setColor(x, y, new Color(clamp(r / weightSum), clamp(g / weightSum), clamp(b / weightSum), 1.0));
+                outputPixelWriter.setColor(x, y, new Color(clamp(r / weightSum), clamp(g / weightSum), clamp(b / weightSum), 1.0));
             }
         }
 
